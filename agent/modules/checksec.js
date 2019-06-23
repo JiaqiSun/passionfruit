@@ -6,12 +6,9 @@ import { dictFromPlistCharArray } from '../app/lib/nsdict'
 
 
 export default function checksec() {
-  
   const [main ] = Process.enumerateModules()
-  
   const buffer = new ReadOnlyMemoryBuffer(main.base, main.size)
-  const info = macho.parse(buffer)
-  
+  const info = macho.parse(buffer)  
   const imports = new Set(Module.enumerateImports(main.path).map(i => i.name))
   const result = {
     pie: Boolean(info.flags.pie),
@@ -19,7 +16,6 @@ export default function checksec() {
     canary: imports.has('__stack_chk_guard'),
     arc: imports.has('objc_release')
   }
-  
 
   const hasCodeSign = info.cmds.filter(cmd => cmd.type === 'code_signature').length > 0
   if (!hasCodeSign)
