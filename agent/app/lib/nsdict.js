@@ -50,7 +50,7 @@ export function dictFromNSDictionary(nsDict) {
 export function dictFromPlistCharArray(address, size) {
   const format = Memory.alloc(Process.pointerSize)
   const err = Memory.alloc(Process.pointerSize)
-  const data = NSData.dataWithBytesNoCopy_length_(address, size)
+  const data = NSData.dataWithBytesNoCopy_length_freeWhenDone_(address, size, 0)
   // it is ObjectiveC's fault for the long line
   // eslint-disable-next-line
   const dict = NSPropertyListSerialization.propertyListFromData_mutabilityOption_format_errorDescription_(
