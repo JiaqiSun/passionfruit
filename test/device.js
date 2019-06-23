@@ -1,7 +1,11 @@
-const { expect } = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+const chai = require('chai')
 
 const { FridaUtil } = require('../lib/utils')
 const { RPC } = require('../lib/rpcv2')
+
+chai.use(chaiAsPromised)
+const { expect } = chai
 
 describe('RPC', () => {
   let device, session
@@ -13,12 +17,10 @@ describe('RPC', () => {
   it('invoke RPC', async () => {
     const rpc = new RPC(session)
     await rpc.connect()
-    rpc.script.destroyed.connect((err) => {
-      console.error(err)
-    })
 
-    expect(await rpc.api.checksec()).to.be.an('object')
-    expect(await rpc.api.cookies()).to.be.an('array')
+    expect(await rpc.api.checksec()).to.be.an('object').and.to.has.keys(['entitlements', 'encrypted', 'arc', 'canary', 'pie'])
+    expect(await rpc.invoke('cookies/list')).to.be.an('array')
+    expect(rpc.invoke('cookies/non-exist')).to.be.rejected
   })
 
   afterEach(async () => {
