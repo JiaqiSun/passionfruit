@@ -12,11 +12,13 @@ export function register(func, name) {
 }
 
 export function invoke(name, args) {
-  const { NSAutoreleasePool, NSMutableDictionary } = ObjC.classes
+  const { NSAutoreleasePool } = ObjC.classes
   const pool = NSAutoreleasePool.alloc().init()
-  const result = exported.get(name).apply(null, args)
-  pool.release()
-  return result
+  try {
+    return exported.get(name).apply(null, args)
+  } finally {
+    pool.release()
+  }
 }
 
 export function interfaces() {
