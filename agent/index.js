@@ -21,5 +21,5 @@ function registerModules() {
 
 registerModules()
 
-console.log(JSON.stringify(invoke('checksec'), null, 2))
-console.log(JSON.stringify(interfaces()))
+// console.log(JSON.stringify(invoke('checksec'), null, 2))
+// console.log(JSON.stringify(interfaces()))
