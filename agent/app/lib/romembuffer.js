@@ -48,7 +48,7 @@ mapping.forEach((type) => {
   const inverse = function(offset) {
     const address = this.base.add(offset)
     const buf = Buffer.from(Memory.readByteArray(address, size))
-    return buf['read' + bufferType + (isLE ? 'BE' : 'LE')]()
+    return buf['read' + bufferType + (isLE ? 'BE' : 'LE')](0)
   }
 
   if (size > 1) {
