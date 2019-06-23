@@ -14,8 +14,12 @@ export function register(func, name) {
 export function invoke(name, args) {
   const { NSAutoreleasePool } = ObjC.classes
   const pool = NSAutoreleasePool.alloc().init()
+  const method = exported.get(name)
+  if (!method)
+    throw new Error(`method "${name}" not found`)
+
   try {
-    return exported.get(name).apply(null, args)
+    return method.apply(null, args)
   } finally {
     pool.release()
   }

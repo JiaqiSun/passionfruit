@@ -1,6 +1,6 @@
 const PROPERTIES = ['version', 'name', 'value', 'domain', 'path']
 
-export default function cookies() {
+export function list() {
   const jar = ObjC.classes.NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies()
   const result = new Array(jar.count())
 
