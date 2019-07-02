@@ -36,12 +36,16 @@ describe('RPC', () => {
   })
 
   it('should covcer the modules', async () => {
+    await rpc.syslog.start()
+
     expect(await rpc.info.info()).to.be.an('object')
       .and.to.has.keys(['tmp', 'home', 'json', 'id', 'bundle', 'binary', 'urls', 'minOS', 'name', 'semVer', 'version'])
     expect(await rpc.info.userDefaults()).to.be.an('object')
     expect(await rpc.symbol.modules()).to.be.an('array')
     expect(await rpc.symbol.imports('MobileSafari')).to.be.an('array')
     expect(await rpc.symbol.exports('WebKit')).to.be.an('array')
+    
+    await rpc.syslog.stop()
   })
 
   afterEach(async () => {
