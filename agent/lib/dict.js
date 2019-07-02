@@ -1,5 +1,6 @@
 const { NSArray, NSData, NSDictionary, NSNumber, NSPropertyListSerialization } = ObjC.classes
 
+const NSPropertyListImmutable = 0
 
 export function valueOf(value) {
   if (value === null || typeof value !== 'object')

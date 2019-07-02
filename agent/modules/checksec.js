@@ -1,8 +1,8 @@
 /* eslint import/no-extraneous-dependencies: 0 */
 
 import macho from 'macho'
-import ReadOnlyMemoryBuffer from '../app/lib/romembuffer'
-import { dictFromPlistCharArray } from '../app/lib/nsdict'
+import ReadOnlyMemoryBuffer from '../lib/romembuffer'
+import { dictFromPlistCharArray } from '../lib/dict'
 
 
 export default function checksec() {
