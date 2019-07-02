@@ -44,13 +44,27 @@ describe('RPC', () => {
     expect(await rpc.symbol.modules()).to.be.an('array')
     expect(await rpc.symbol.imports('MobileSafari')).to.be.an('array')
     expect(await rpc.symbol.exports('WebKit')).to.be.an('array')
-    
+
     const BOOKMARKS = '/var/mobile/Library/Safari/Bookmarks.db'
     expect(await rpc.sqlite.tables(BOOKMARKS)).to.be.an('array')
     expect(await rpc.sqlite.query(BOOKMARKS, 'select count(*) from bookmarks')).to.be.an('array').and.have.lengthOf(1)
     expect(await rpc.sqlite.data(BOOKMARKS, 'bookmarks')).to.be.an('object').and.have.keys(['header', 'data'])
 
     await rpc.syslog.stop()
+  })
+
+  it('should capture a screenshot', async () => {
+    const { writeFile } = require('fs')
+    const { tmpdir } = require('os')
+    const { join } = require('path')
+    const { promisify } = require('util')
+
+    const write = promisify(writeFile)
+    const filename = join(tmpdir(), `${Math.random().toString(36)}.png`)
+    const str = await rpc.screenshot()
+    expect(str).to.be.a('string')
+    await write(filename, Buffer.from(str, 'base64'))
+    console.info(`\t[INFO] open ${filename} to see the picture`)
   })
 
   afterEach(async () => {
