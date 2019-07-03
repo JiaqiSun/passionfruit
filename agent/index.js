@@ -14,11 +14,10 @@ function registerModules() {
     const mod = context(filename)
     const [, name] = /\.\/(\S+)\.js/.exec(filename)
     for (const [method, func] of Object.entries(mod)) {
-      if (method === 'default') {
+      if (method === 'default')
         register(func, name)
-      } else {
+      else
         register(func, [name, func.name].join('/'))
-      }
     }
   }
 }

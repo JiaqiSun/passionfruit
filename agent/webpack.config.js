@@ -2,14 +2,14 @@ const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
-  entry:  path.resolve(__dirname, './index.js'),
+  entry: path.resolve(__dirname, './index.js'),
   // devtool: 'source-map',
   optimization: {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
           keep_classnames: true,
-          keep_fnames: true,
+          keep_fnames: true
         }
       })
     ]

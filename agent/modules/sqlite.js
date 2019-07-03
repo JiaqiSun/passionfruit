@@ -8,7 +8,8 @@ export class Database {
   }
 
   tables() {
-    const statement = this.prepare('SELECT tbl_name FROM sqlite_master WHERE type="table" and tbl_name <> "sqlite_sequence"')
+    const SQL_TABLES = 'SELECT tbl_name FROM sqlite_master WHERE type="table" and tbl_name <> "sqlite_sequence"'
+    const statement = this.prepare(SQL_TABLES)
     return this.all(statement).map(row => row[0])
   }
 

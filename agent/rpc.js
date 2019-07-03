@@ -19,7 +19,7 @@ export function invoke(name, args) {
     throw new Error(`method "${name}" not found`)
 
   try {
-    return method.apply(null, args)
+    return method(...args)
   } finally {
     pool.release()
   }

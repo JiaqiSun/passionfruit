@@ -1,6 +1,7 @@
 const { NSBundle, NSString } = ObjC.classes
 const copyClassNamesForImage = new NativeFunction(
-  Module.findExportByName(null, 'objc_copyClassNamesForImage'), 'pointer', ['pointer', 'pointer'])
+  Module.findExportByName(null, 'objc_copyClassNamesForImage'), 'pointer', ['pointer', 'pointer']
+)
 const free = new NativeFunction(Module.findExportByName(null, 'free'), 'void', ['pointer'])
 
 export function dump(path) {
@@ -20,8 +21,7 @@ export function dump(path) {
   return classes
 }
 
-const normalize = path => 
-  NSString.stringWithString_(path).stringByResolvingAndStandardizingPath().toString()
+const normalize = path => NSString.stringWithString_(path).stringByResolvingAndStandardizingPath().toString()
 
 const flattern = array => array.reduce((sum, item) => sum.concat(item), [])
 
@@ -51,17 +51,19 @@ export function hierarchy(scope) {
   }
 
   const tree = {}
-  for (let name of list) {
+  for (const name of list) {
     const clazz = ObjC.classes[name]
     const chain = [name]
 
     let parent = clazz
+    /* eslint no-cond-assign:0 */
     while (parent = parent.$superClass)
       chain.unshift(parent.$className)
 
     let node = tree
-    for (let className of chain) {
-      if (!node[className]) node[className] = {}
+    for (const className of chain) {
+      if (!node[className])
+        node[className] = {}
       node = node[className]
     }
   }

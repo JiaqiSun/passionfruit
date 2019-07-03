@@ -27,5 +27,5 @@ export function imports(name) {
 
 export function exports(name) {
   const mod = name || Process.enumerateModules()[0].name
-  return uniqueAndDemangle(Module.enumerateExports(name))
+  return uniqueAndDemangle(Module.enumerateExports(mod))
 }

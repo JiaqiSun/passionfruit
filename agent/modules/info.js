@@ -13,21 +13,21 @@ export function info() {
     json,
     urls: []
   }
-  
+
   const BUNDLE_ATTR_MAPPING = {
     id: 'bundleIdentifier',
     bundle: 'bundlePath',
     binary: 'executablePath'
   }
 
-  for (let [key, method] of Object.entries(BUNDLE_ATTR_MAPPING))
+  for (const [key, method] of Object.entries(BUNDLE_ATTR_MAPPING))
     result[key] = mainBundle[method]().toString()
 
   if ('CFBundleURLTypes' in json) {
-    result.urls = json['CFBundleURLTypes'].map(item => ({
-      name: item['CFBundleURLName'],
-      schemes: item['CFBundleURLSchemes'],
-      role: item['CFBundleTypeRole']
+    result.urls = json.CFBundleURLTypes.map(item => ({
+      name: item.CFBundleURLName,
+      schemes: item.CFBundleURLSchemes,
+      role: item.CFBundleTypeRole
     }))
   }
 
@@ -38,7 +38,7 @@ export function info() {
     minOS: 'MinimumOSVersion'
   }
 
-  for (let [key, label] of Object.entries(READABLE_NAME_MAPPING))
+  for (const [key, label] of Object.entries(READABLE_NAME_MAPPING))
     result[key] = json[label] || 'N/A'
 
   return result

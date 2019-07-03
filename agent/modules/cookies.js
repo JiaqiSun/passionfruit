@@ -7,7 +7,7 @@ export function list() {
   for (let i = 0; i < jar.count(); i++) {
     const cookie = jar.objectAtIndex_(i)
     const entry = {}
-    for (let prop of PROPERTIES) {
+    for (const prop of PROPERTIES) {
       entry[prop] = cookie[prop]().toString()
       entry.isSecure = cookie.isSecure()
     }
@@ -15,4 +15,9 @@ export function list() {
   }
 
   return result
+}
+
+// to mute eslint "Prefer default export"
+export function write() {
+
 }

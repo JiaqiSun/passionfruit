@@ -18,5 +18,6 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-fallthrough': 0,
     'func-names': 0,
+    'no-continue': 0,
   },
 };

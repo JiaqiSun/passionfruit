@@ -6,9 +6,9 @@ import { dictFromPlistCharArray } from '../lib/dict'
 
 
 export default function checksec() {
-  const [main ] = Process.enumerateModules()
+  const [main] = Process.enumerateModules()
   const buffer = new ReadOnlyMemoryBuffer(main.base, main.size)
-  const info = macho.parse(buffer)  
+  const info = macho.parse(buffer)
   const imports = new Set(Module.enumerateImports(main.path).map(i => i.name))
   const result = {
     pie: Boolean(info.flags.pie),
@@ -21,7 +21,7 @@ export default function checksec() {
   if (!hasCodeSign)
     return result
 
-  const CS_OPS_ENTITLEMENTS_BLOB = 7  
+  const CS_OPS_ENTITLEMENTS_BLOB = 7
   const csops = new NativeFunction(
     Module.findExportByName('libsystem_kernel.dylib', 'csops'),
     'int',
@@ -33,18 +33,18 @@ export default function checksec() {
   //   uint32_t length;
   // };
 
-  const SIZE_OF_CSHEADER = 8  
+  const SIZE_OF_CSHEADER = 8
   const csheader = Memory.alloc(SIZE_OF_CSHEADER)
-  if (csops(Process.id, CS_OPS_ENTITLEMENTS_BLOB, csheader, SIZE_OF_CSHEADER) == -1) {
+  if (csops(Process.id, CS_OPS_ENTITLEMENTS_BLOB, csheader, SIZE_OF_CSHEADER) === -1) {
     const reader = new ReadOnlyMemoryBuffer(csheader, SIZE_OF_CSHEADER)
     const length = reader.readUInt32BE(4)
     const content = Memory.alloc(length)
-    if (csops(Process.id, CS_OPS_ENTITLEMENTS_BLOB, content, length) == 0) {
+    if (csops(Process.id, CS_OPS_ENTITLEMENTS_BLOB, content, length) === 0) {
       result.entitlements = dictFromPlistCharArray(
-        content.add(SIZE_OF_CSHEADER), length - SIZE_OF_CSHEADER)
+        content.add(SIZE_OF_CSHEADER), length - SIZE_OF_CSHEADER
+      )
     }
   }
 
   return result
 }
-

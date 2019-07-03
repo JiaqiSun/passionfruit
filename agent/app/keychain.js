@@ -1,10 +1,16 @@
 const { NSMutableDictionary } = ObjC.classes
 
 
-const SecItemCopyMatching = new NativeFunction(ptr(Module.findExportByName('Security', 'SecItemCopyMatching')), 'pointer', ['pointer', 'pointer'])
-const SecItemDelete = new NativeFunction(ptr(Module.findExportByName('Security', 'SecItemDelete')), 'pointer', ['pointer'])
+const SecItemCopyMatching = new NativeFunction(
+  Module.findExportByName('Security', 'SecItemCopyMatching'), 'pointer', ['pointer', 'pointer']
+)
+
+const SecItemDelete = new NativeFunction(
+  Module.findExportByName('Security', 'SecItemDelete'), 'pointer', ['pointer']
+)
+
 const SecAccessControlGetConstraints = new NativeFunction(
-  ptr(Module.findExportByName('Security', 'SecAccessControlGetConstraints')),
+  Module.findExportByName('Security', 'SecAccessControlGetConstraints'),
   'pointer', ['pointer'],
 )
 

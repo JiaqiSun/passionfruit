@@ -2,9 +2,15 @@ import { valueOf } from '../lib/dict'
 
 const { NSMutableDictionary } = ObjC.classes
 
-const SecItemCopyMatching = new NativeFunction(Module.findExportByName('Security', 'SecItemCopyMatching'), 'pointer', ['pointer', 'pointer'])
-const SecItemDelete = new NativeFunction(Module.findExportByName('Security', 'SecItemDelete'), 'pointer', ['pointer'])
-const SecAccessControlGetConstraints = new NativeFunction(Module.findExportByName('Security', 'SecAccessControlGetConstraints'), 'pointer', ['pointer'])
+const SecItemCopyMatching = new NativeFunction(
+  Module.findExportByName('Security', 'SecItemCopyMatching'), 'pointer', ['pointer', 'pointer']
+)
+const SecItemDelete = new NativeFunction(
+  Module.findExportByName('Security', 'SecItemDelete'), 'pointer', ['pointer']
+)
+const SecAccessControlGetConstraints = new NativeFunction(
+  Module.findExportByName('Security', 'SecAccessControlGetConstraints'), 'pointer', ['pointer']
+)
 
 const kCFBooleanTrue = ObjC.classes.__NSCFBoolean.numberWithBool_(true)
 
@@ -189,10 +195,10 @@ export function list() {
     service: kSecAttrService,
     account: kSecAttrAccount,
     label: kSecAttrLabel,
-    data: 'v_Data',
+    data: 'v_Data'
   }
 
-  for (let clazz of kSecClasses) {
+  for (const clazz of kSecClasses) {
     query.setObject_forKey_(clazz, kSecClass)
 
     const p = Memory.alloc(Process.pointerSize)
@@ -209,7 +215,7 @@ export function list() {
         accessibleAttribute: constantLookup(item.objectForKey_(kSecAttrAccessible))
       }
 
-      for (let [key, attr] of Object.entries(KEY_MAPPING))
+      for (const [key, attr] of Object.entries(KEY_MAPPING))
         readable[key] = valueOf(item.objectForKey_(attr))
 
       result.push(readable)
@@ -221,7 +227,7 @@ export function list() {
 
 export function clear() {
   const query = NSMutableDictionary.alloc().init()
-  for (let clazz of kSecClasses) {
+  for (const clazz of kSecClasses) {
     query.setObject_forKey_(clazz, kSecClass)
     SecItemDelete(query)
   }

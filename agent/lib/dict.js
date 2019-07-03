@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: 0 */
 const { NSArray, NSData, NSDictionary, NSNumber, NSPropertyListSerialization } = ObjC.classes
 
 const NSPropertyListImmutable = 0

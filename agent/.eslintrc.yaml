@@ -4,6 +4,7 @@ rules:
   nonblock-statement-body-position: [error, "below"]
   function-paren-newline: [error, consistent]
   comma-dangle: [error, never]
+  max-len: ["error", { "code": 120 }]
   
 globals:
   Duktape: true
