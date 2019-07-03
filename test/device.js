@@ -55,6 +55,15 @@ describe('RPC', () => {
     await rpc.syslog.stop()
   })
 
+  it('should dump classes', async () => {
+    const main = await rpc.classdump.dump()
+    const withFrameworks = await rpc.classdump.ownClasses()
+
+    expect(main).to.be.an('array')
+    expect(withFrameworks).to.be.an('array')
+    expect(main.length).to.lte(withFrameworks.length)
+  })
+
   it('should capture a screenshot', async () => {
     const { writeFile } = require('fs')
     const { tmpdir } = require('os')
@@ -65,8 +74,11 @@ describe('RPC', () => {
     const filename = join(tmpdir(), `${Math.random().toString(36)}.png`)
     const str = await rpc.screenshot()
     expect(str).to.be.a('string')
-    await write(filename, Buffer.from(str, 'base64'))
-    console.info(`\t[INFO] open ${filename} to see the picture`)
+
+    if (process.env.DEBUG_SAVE_SCREENSHOT) {
+      await write(filename, Buffer.from(str, 'base64'))
+      console.info(`\t[INFO] open ${filename} to see the picture`)
+    }
   })
 
   afterEach(async () => {
