@@ -62,6 +62,22 @@ describe('RPC', () => {
     expect(main).to.be.an('array')
     expect(withFrameworks).to.be.an('array')
     expect(main.length).to.lte(withFrameworks.length)
+
+    const isTree = node => expect(node).to.be.an('object')
+
+    // app scope
+    isTree(await rpc.classdump.hierarchy('__app__'))
+    // main module
+    isTree(await rpc.classdump.hierarchy('__main__'))
+    // all classes (pretty slow)
+    isTree(await rpc.classdump.hierarchy('__global__'))
+    // single module
+    isTree(await rpc.classdump.hierarchy('/System/Library/Frameworks/UIKit.framework/UIKit'))
+    // selected modules
+    isTree(await rpc.classdump.hierarchy([
+      '/System/Library/Frameworks/UIKit.framework/UIKit',
+      '/System/Library/Frameworks/CFNetwork.framework/CFNetwork'
+    ]))
   })
 
   it('should capture a screenshot', async () => {

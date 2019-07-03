@@ -23,12 +23,50 @@ export function dump(path) {
 const normalize = path => 
   NSString.stringWithString_(path).stringByResolvingAndStandardizingPath().toString()
 
+const flattern = array => array.reduce((sum, item) => sum.concat(item), [])
+
 export function ownClasses() {
   const bundle = normalize(NSBundle.mainBundle().bundlePath())
-  return Process.enumerateModules()
+  const result = Process.enumerateModules()
     .filter(mod => normalize(mod.path).startsWith(bundle))
     .map(mod => dump(mod.path))
-    .reduce((sum, item) => sum.concat(item), [])
+  return flattern(result)
+}
+
+export function hierarchy(scope) {
+  let list
+
+  if (scope === '__global__') {
+    list = Object.keys(ObjC.classes)
+  } else if (scope === '__app__') {
+    list = ownClasses()
+  } else if (scope === '__main__') {
+    list = dump()
+  } else if (Array.isArray(scope)) {
+    // list of paths
+    list = flattern(scope.map(dump))
+  } else {
+    // a module path
+    list = dump(scope)
+  }
+
+  const tree = {}
+  for (let name of list) {
+    const clazz = ObjC.classes[name]
+    const chain = [name]
+
+    let parent = clazz
+    while (parent = parent.$superClass)
+      chain.unshift(parent.$className)
+
+    let node = tree
+    for (let className of chain) {
+      if (!node[className]) node[className] = {}
+      node = node[className]
+    }
+  }
+
+  return tree
 }
 
 export function inspect(clazz) {
