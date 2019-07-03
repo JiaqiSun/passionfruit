@@ -19,7 +19,8 @@
     "postinstall": "node scripts/post-install.js",
     "start": "cross-env NODE_ENV=development nodemon .",
     "frida": "webpack --config agent/webpack.config.js --watch --mode development",
-    "frida:compile": "webpack --config agent/webpack.config.js --mode production"
+    "frida:compile": "webpack --config agent/webpack.config.js --mode production",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

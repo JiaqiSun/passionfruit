@@ -37,4 +37,7 @@ export function start() {
   setImmediate(read)
 }
 
-export const stop = () => stream && stream.close()
+export function stop() {
+  if (stream)
+    stream.close()
+}

@@ -16,7 +16,16 @@ function uniqueAndDemangle(list) {
   })
 }
 
-export const modules = () => Process.enumerateModules()
-export const imports = name => uniqueAndDemangle(Module.enumerateImports(name
-  || Process.enumerateModules()[0].name))
-export const exports = name => uniqueAndDemangle(Module.enumerateExports(name))
+export function modules() {
+  return Process.enumerateModules()
+}
+
+export function imports(name) {
+  const mod = name || Process.enumerateModules()[0].name
+  return uniqueAndDemangle(Module.enumerateImports(mod))
+}
+
+export function exports(name) {
+  const mod = name || Process.enumerateModules()[0].name
+  return uniqueAndDemangle(Module.enumerateExports(name))
+}
