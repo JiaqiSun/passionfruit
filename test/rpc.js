@@ -14,9 +14,9 @@ describe('RPC', () => {
   beforeEach(async () => {
     device = await frida.getUsbDevice()
     try {
-      session = await device.attach('Safari')
+      session = await device.attach(process.env.APP || 'Safari')
     } catch (_) {
-      session = await FridaUtil.spawn(device, { identifier: 'com.apple.mobilesafari' })
+      session = await FridaUtil.spawn(device, { identifier: process.env.BUNDLE || 'com.apple.mobilesafari' })
     }
     const __exports = await connect(session)
     // console.log(await __exports.interfaces())
@@ -78,7 +78,7 @@ describe('RPC', () => {
       '/System/Library/Frameworks/UIKit.framework/UIKit',
       '/System/Library/Frameworks/CFNetwork.framework/CFNetwork'
     ]))
-  })
+  }).timeout(5000)
 
   it('should capture a screenshot', async () => {
     const { writeFile } = require('fs')
