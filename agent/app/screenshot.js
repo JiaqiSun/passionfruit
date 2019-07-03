@@ -59,7 +59,6 @@ export default function screenshot() {
     UIGraphicsEndImageContext()
 
     const png = new ObjC.Object(UIImagePNGRepresentation(image))
-    console.log(png.base64EncodedStringWithOptions_(0))
     return png.base64EncodedStringWithOptions_(0).toString()
   })
 }
