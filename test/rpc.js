@@ -10,7 +10,7 @@ const { expect } = chai
 
 
 describe('RPC', () => {
-  let device, session, rpc
+  let device, session, rpc, agent
   beforeEach(async () => {
     device = await frida.getUsbDevice()
     try {
@@ -18,9 +18,9 @@ describe('RPC', () => {
     } catch (_) {
       session = await FridaUtil.spawn(device, { identifier: process.env.BUNDLE || 'com.apple.mobilesafari' })
     }
-    const __exports = await connect(session)
+    agent = await connect(session)
     // console.log(await __exports.interfaces())
-    rpc = proxy(__exports)
+    rpc = proxy(agent)
   })
 
   it('should handle basic RPC usage', async () => {
@@ -55,15 +55,24 @@ describe('RPC', () => {
     await rpc.syslog.stop()
   })
 
-  it('should support filesystem', async() => {
+  it('should support filesystem api', async() => {
     const SAFARI_PREF = await rpc.fs.resolve('home', 'Library/Preferences/com.apple.mobilesafari.plist')
 
     expect(await rpc.fs.plist(SAFARI_PREF)).to.be.an('object')
     expect(await rpc.fs.ls('home', 'Library')).to.be.an('array')
     expect(await rpc.fs.ls('bundle')).to.be.an('array')
     expect(rpc.fs.ls('bundle', 'nonexist-path')).to.be.rejected
-    expect(await rpc.fs.text('/etc/passwd')).to.be.a('string')
-  })
+    expect(await rpc.fs.text('/etc/passwd')).to.be.an.instanceof(Buffer)
+
+    agent.message.connect((message, data) => {
+      const { payload } = message
+      expect(payload).to.include.key('subject')
+      if (payload.subject === 'data')
+        expect(data).to.be.instanceOf(Buffer)
+    })
+
+    await rpc.fs.download('/etc/hosts')
+  }).timeout(5000)
 
   it('should dump classes', async () => {
     const main = await rpc.classdump.dump()

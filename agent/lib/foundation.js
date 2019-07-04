@@ -1,3 +1,5 @@
+import { valueOf } from './dict'
+
 function NSStringWrapper(name) {
   return function() {
     const func = new NativeFunction(Module.findExportByName(null, name), 'pointer', [])
@@ -34,7 +36,7 @@ export function attrs(path) {
   }
 
   for (const [jsKey, ocKey] of Object.entries(lookup))
-    result[jsKey] = attr.objectForKey_(ocKey)
+    result[jsKey] = valueOf(attr.objectForKey_(ocKey))
 
   return result
 }

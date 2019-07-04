@@ -66,5 +66,36 @@ export async function text(path) {
     throw new Error(`unable to open file ${path}`)
 
   const stream = new UnixInputStream(fd, { autoClose: true })
-  return Buffer.from(await stream.read(SIZE)).toString()
+  return stream.read(SIZE)
+}
+
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : ((r & 0x3) | 0x8)
+    return v.toString(16)
+  })
+}
+
+
+export async function download(path) {
+  const session = uuidv4()
+  const name = Memory.allocUtf8String(path)
+  const watermark = 10 * 1024 * 1024
+  const subject = 'download'
+
+  const { size } = attrs(path)
+  const fd = open(name, 0, 0)
+  if (fd === -1)
+    throw new Error(`unable to open file ${path}`)
+
+  send({ subject, event: 'start', session, path, size })
+  const stream = new UnixInputStream(fd, { autoClose: true })
+  let eof = false
+  while (!eof) {
+    const buf = await stream.read(watermark)
+    eof = (buf.byteLength && buf.byteLength < watermark)
+    send({ subject, event: 'data', session }, buf)
+  }
+  send({ subject, event: 'finish', session })
 }
