@@ -107,11 +107,11 @@ describe('RPC', () => {
 
     const write = promisify(writeFile)
     const filename = join(tmpdir(), `${Math.random().toString(36)}.png`)
-    const str = await rpc.screenshot()
-    expect(str).to.be.a('string')
+    const buf = await rpc.screenshot()
 
+    expect(buf).to.be.an.instanceOf(Buffer)
     if (process.env.DEBUG_SAVE_SCREENSHOT) {
-      await write(filename, Buffer.from(str, 'base64'))
+      await write(filename, buf)
       console.info(`\t[INFO] open ${filename} to see the picture`)
     }
   })
