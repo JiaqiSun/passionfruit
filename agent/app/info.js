@@ -1,15 +1,13 @@
 import { toJSON } from './lib/nsdict'
 import { NSTemporaryDirectory } from './lib/foundation'
 
-const { NSBundle, NSProcessInfo, NSUserDefaults } = ObjC.classes
+const { NSBundle, NSUserDefaults } = ObjC.classes
 
 
 export function info() {
   const mainBundle = NSBundle.mainBundle()
   const json = toJSON(mainBundle.infoDictionary())
-  const data = NSProcessInfo.processInfo()
-    .environment().objectForKey_('HOME').toString()
-
+  const home = NSHomeDirectory()
   const tmp = NSTemporaryDirectory()
 
   const map = {
@@ -24,7 +22,7 @@ export function info() {
     bundle: mainBundle.bundlePath().toString(),
     binary: mainBundle.executablePath().toString(),
     tmp,
-    data,
+    home,
     json
   }
 
