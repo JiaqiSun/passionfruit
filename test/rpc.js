@@ -35,7 +35,7 @@ describe('RPC', () => {
     expect(() => rpc.foo = 'bar').to.be.throw
   })
 
-  it('should cover modules', async () => {
+  it('should support common modules', async () => {
     await rpc.syslog.start()
 
     expect(await rpc.info.info()).to.be.an('object')
@@ -53,6 +53,16 @@ describe('RPC', () => {
     expect(await rpc.keychain.list()).to.be.an('array')
 
     await rpc.syslog.stop()
+  })
+
+  it('should support filesystem', async() => {
+    const SAFARI_PREF = await rpc.fs.resolve('home', 'Library/Preferences/com.apple.mobilesafari.plist')
+
+    expect(await rpc.fs.plist(SAFARI_PREF)).to.be.an('object')
+    expect(await rpc.fs.ls('home', 'Library')).to.be.an('array')
+    expect(await rpc.fs.ls('bundle')).to.be.an('array')
+    expect(rpc.fs.ls('bundle', 'nonexist-path')).to.be.rejected
+    expect(await rpc.fs.text('/etc/passwd')).to.be.a('string')
   })
 
   it('should dump classes', async () => {
