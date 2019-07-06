@@ -1,8 +1,7 @@
 const chaiAsPromised = require('chai-as-promised')
 const chai = require('chai')
 
-const frida = require('frida')
-const { FridaUtil } = require('../lib/utils')
+const { Device } = require('../lib/device')
 const { connect, proxy } = require('../lib/rpcv2')
 
 chai.use(chaiAsPromised)
@@ -11,14 +10,9 @@ const { expect } = chai
 
 describe('RPC', () => {
   let device, session, rpc, agent
-  beforeEach(async () => {
-    device = await frida.getUsbDevice()
-    try {
-      session = await device.attach(process.env.APP || 'Safari')
-    } catch (_) {
-      session = await FridaUtil.spawn(device, { identifier: process.env.BUNDLE || 'com.apple.mobilesafari' })
-    }
-
+  before(async () => {
+    device = await Device.usb()
+    session = await device.start(process.env.APP || 'com.apple.mobilesafari')
     agent = await connect(session)
     // console.log(await __exports.interfaces())
     rpc = proxy(agent)
@@ -130,7 +124,7 @@ describe('RPC', () => {
     }
   })
 
-  afterEach(async () => {
+  after(async () => {
     if (session)
       await session.detach()
   })
