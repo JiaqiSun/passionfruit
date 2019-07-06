@@ -1,5 +1,5 @@
 import { toJSON } from './lib/nsdict'
-import { NSTemporaryDirectory } from './lib/foundation'
+import { NSTemporaryDirectory, NSHomeDirectory } from './lib/foundation'
 
 const { NSBundle, NSUserDefaults } = ObjC.classes
 
