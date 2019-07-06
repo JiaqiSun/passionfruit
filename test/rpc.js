@@ -18,6 +18,7 @@ describe('RPC', () => {
     } catch (_) {
       session = await FridaUtil.spawn(device, { identifier: process.env.BUNDLE || 'com.apple.mobilesafari' })
     }
+
     agent = await connect(session)
     // console.log(await __exports.interfaces())
     rpc = proxy(agent)
@@ -37,6 +38,8 @@ describe('RPC', () => {
 
   it('should support common modules', async () => {
     await rpc.syslog.start()
+
+    expect(await rpc.device.info()).to.be.an('object')
 
     expect(await rpc.info.info()).to.be.an('object')
       .and.to.has.keys(['tmp', 'home', 'json', 'id', 'bundle', 'binary', 'urls', 'minOS', 'name', 'semVer', 'version'])
@@ -83,7 +86,7 @@ describe('RPC', () => {
     })
 
     await rpc.fs.download('/etc/hosts')
-  }).timeout(5000)
+  })
 
   it('should dump classes', async () => {
     const main = await rpc.classdump.dump()
@@ -108,7 +111,7 @@ describe('RPC', () => {
       '/System/Library/Frameworks/UIKit.framework/UIKit',
       '/System/Library/Frameworks/CFNetwork.framework/CFNetwork'
     ]))
-  }).timeout(5000)
+  })
 
   it('should capture a screenshot', async () => {
     const { writeFile } = require('fs')
