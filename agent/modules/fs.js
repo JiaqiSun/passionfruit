@@ -5,15 +5,20 @@ import { valueOf } from '../lib/dict'
 const { NSBundle, NSFileManager, NSString, NSDictionary } = ObjC.classes
 
 
-export function readdir(path) {
+function successful(block) {
   const pError = Memory.alloc(Process.pointerSize)
   Memory.writePointer(pError, NULL)
-
-  const list = NSFileManager.defaultManager().contentsOfDirectoryAtPath_error_(path, pError)
+  const result = block(pError)
   const err = Memory.readPointer(pError)
-
   if (!err.isNull())
     throw new Error(new ObjC.Object(err).localizedDescription())
+  return result
+}
+
+
+export function readdir(path) {
+  const list = successful(pError =>
+    NSFileManager.defaultManager().contentsOfDirectoryAtPath_error_(path, pError))
 
   const isDir = Memory.alloc(Process.pointerSize)
   const count = list.count()
@@ -55,6 +60,32 @@ export function plist(path) {
   if (!info)
     throw new Error(`"${path}" is not valid plist format`)
   return valueOf(info)
+}
+
+
+export function write(path, text) {
+  const NSUTF8StringEncoding = 4
+  return successful(pError =>
+    NSString.stringWithString_(text)
+      .writeToFile_atomically_encoding_error_(path, NULL, NSUTF8StringEncoding, pError))
+}
+
+
+export function remove(path) {
+  return successful(pError =>
+    NSFileManager.defaultManager().removeItemAtPath_error_(path, pError))
+}
+
+
+export function move(src, dst) {
+  return successful(pError =>
+    NSFileManager.defaultManager().moveItemAtPath_toPath_error_(src, dst, pError))
+}
+
+
+export function copy(src, dst) {
+  return successful(pError =>
+    NSFileManager.defaultManager().copyItemAtPath_toPath_error_(src, dst, pError))
 }
 
 

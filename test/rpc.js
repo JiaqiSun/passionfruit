@@ -62,7 +62,18 @@ describe('RPC', () => {
     expect(await rpc.fs.ls('home', 'Library')).to.be.an('array')
     expect(await rpc.fs.ls('bundle')).to.be.an('array')
     expect(rpc.fs.ls('bundle', 'nonexist-path')).to.be.rejected
-    expect(await rpc.fs.text('/etc/passwd')).to.be.an.instanceof(Buffer)
+
+    const WRITE_TARGET = await rpc.fs.resolve('home', 'tmp/hello' + Math.random())
+    const WRITE_CONTENT = 'hello world' + Math.random().toString(16)
+    const f1 = `${WRITE_TARGET}.bak`
+    const f2 = `${WRITE_TARGET}.new`
+    expect(await rpc.fs.write(WRITE_TARGET, WRITE_CONTENT)).to.be.true
+    expect((await rpc.fs.text(WRITE_TARGET)).toString()).equals(WRITE_CONTENT)
+    expect(await rpc.fs.copy(WRITE_TARGET, f1)).to.be.true
+    expect(await rpc.fs.move(WRITE_TARGET, f2)).to.be.true
+    expect((await rpc.fs.text(f2)).toString()).equals(WRITE_CONTENT) 
+    expect(await rpc.fs.remove(f1)).to.be.true
+    expect(await rpc.fs.remove(f2)).to.be.true
 
     agent.message.connect((message, data) => {
       const { payload } = message
