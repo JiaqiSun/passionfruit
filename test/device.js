@@ -20,5 +20,6 @@ describe('device management', () => {
     const remote = await Device.connect(HOST)
     expect(remote).instanceOf(Device)
     await Device.remove(remote.host)
+    expect(await device.valueOf()).to.have.keys('name', 'id', 'icon')
   })
 })
