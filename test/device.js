@@ -1,10 +1,9 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import { expect, use } from 'chai'
 
-const { Device } = require('../lib/device')
+import { Device } from '../lib/device'
 
-chai.use(chaiAsPromised)
-const { expect } = chai
+use(chaiAsPromised)
 
 describe('device management', () => {
   it('should', async () => {

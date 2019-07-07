@@ -1,10 +1,10 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai, { use } from 'chai'
 
-const { Device } = require('../lib/device')
-const { connect, proxy } = require('../lib/rpcv2')
+import { Device } from '../lib/device'
+import { connect, proxy } from '../lib/rpcv2'
 
-chai.use(chaiAsPromised)
+use(chaiAsPromised)
 const { expect } = chai
 
 
