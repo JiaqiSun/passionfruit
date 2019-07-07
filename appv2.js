@@ -77,8 +77,3 @@ export function stop() {
   server.close()
 }
 
-process.on('unhandledRejection', err => {
-  console.error('An unhandledRejection occurred: '.red)
-  console.error(`Rejection: ${err}`.red)
-  console.error(err.stack)
-})
