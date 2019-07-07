@@ -19,6 +19,11 @@ describe('device management', () => {
     expect(await device.valueOf()).to.have.keys('name', 'id', 'icon')
     expect(device.host).to.be.null
 
+    const session = await device.spawn('com.apple.calculator')
+    await session.detach()
+
+    expect(() => Device.get(null, 0)).to.throw
+
     const HOST = '192.168.1.1:27042'
     const remote = await Device.connect(HOST)
     expect(remote).instanceOf(Device)
