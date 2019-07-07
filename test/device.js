@@ -15,11 +15,13 @@ describe('device management', () => {
     expect(apps).to.be.an('array')
     expect(apps.length).to.be.greaterThan(0)
     expect(apps[0]).to.have.keys('id', 'identifier', 'largeIcon', 'name', 'smallIcon')
+    expect(await device.open('com.apple.mobilesafari', 'about:blank')).to.gt(0)
+    expect(await device.valueOf()).to.have.keys('name', 'id', 'icon')
+    expect(device.host).to.be.null
 
     const HOST = '192.168.1.1:27042'
     const remote = await Device.connect(HOST)
     expect(remote).instanceOf(Device)
     await Device.remove(remote.host)
-    expect(await device.valueOf()).to.have.keys('name', 'id', 'icon')
   })
 })
