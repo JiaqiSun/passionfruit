@@ -14,6 +14,9 @@ describe('RPC', () => {
     device = await Device.usb()
     session = await device.start(process.env.APP || 'com.apple.mobilesafari')
     agent = await connect(session)
+
+    await agent.load()
+
     // console.log(await __exports.interfaces())
     rpc = proxy(agent)
   })
