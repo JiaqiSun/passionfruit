@@ -23,7 +23,7 @@ router
   })
   .get('/device/:device/apps', async (ctx) => {
     const device = await Device.get(ctx.params.device)
-    ctx.body = device.apps()
+    ctx.body = await device.apps()
   })
   .post('/url/start', async (ctx) => {
     const { device, bundle, url } = ctx.request.body
