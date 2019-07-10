@@ -1,8 +1,8 @@
-#!/usr/bin/env node
-const net = require('net')
+#!/usr/bin/env node -r esm
 
-const app = require('../app')
-const config = require('../lib/config')
+import { connect } from 'net'
+import { start } from '../appv2'
+import config from '../lib/config'
 
 function usage() {
   console.log('usage: passionfruit {server|syslog}')
@@ -14,7 +14,7 @@ function syslog() {
   if (Number.isNaN(port))
     console.log('usage: passionfruit console [port]')
 
-  net.connect({ host: 'localhost', port })
+  connect({ host: 'localhost', port })
     .on('end', () => process.exit(0))
     .pipe(process.stdout)
 }
@@ -27,7 +27,13 @@ function main() {
     if (action !== 'server')
       return usage()
   }
-  return app.start(config)
+  return start(config)
 }
+
+process.on('unhandledRejection', err => {
+  console.error('An unhandledRejection occurred: '.red)
+  console.error(`Rejection: ${err}`.red)
+  console.error(err.stack)
+})
 
 main()

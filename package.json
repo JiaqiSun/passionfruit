@@ -1,8 +1,8 @@
 {
   "name": "passionfruit",
   "version": "0.5.5",
-  "description": "Inject to iOS App",
-  "main": "app.js",
+  "description": "iOS app analyzer tool",
+  "main": "appv2.js",
   "engines": {
     "node": ">= 8.5.0"
   },
@@ -13,11 +13,11 @@
     "lint:agent": "eslint agent/app",
     "lint:server": "eslint *.js && eslint lib",
     "lint:frontend": "eslint gui/src",
-    "dev": "node scripts/dev-all.js",
-    "compile": "node scripts/compile.js compile",
-    "watch": "node scripts/compile.js watch",
-    "postinstall": "node scripts/post-install.js",
-    "start": "cross-env NODE_ENV=development nodemon .",
+    "dev": "node -r esm scripts/dev-all.js",
+    "compile": "node -r esm scripts/compile.js compile",
+    "watch": "node -r esm scripts/compile.js watch",
+    "postinstall": "node -r esm scripts/post-install.js",
+    "start": "cross-env NODE_ENV=development nodemon -r esm .",
     "frida": "webpack --config agent/webpack.config.js --watch --mode development",
     "frida:compile": "webpack --config agent/webpack.config.js --mode production",
     "test": "mocha --timeout 10000 --require esm",
