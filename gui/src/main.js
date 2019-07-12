@@ -35,11 +35,11 @@ const v = new Vue({
 
 const socket = io('/devices', { path: '/msg' })
 socket
-  .on('deviceRemove', (dev) => {
+  .on('DEVICE_REMOVE', (dev) => {
     store.commit(REMOVE_DEVICE, dev)
     v.$toast.open(`${dev.name} has been removed`)
   })
-  .on('deviceAdd', (dev) => {
+  .on('DEVICE_ADD', (dev) => {
     store.commit(ADD_DEVICE, dev)
     v.$toast.open(`New device ${dev.name} has been connected`)
 
