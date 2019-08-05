@@ -4,6 +4,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 
+const config = require('../lib/config')
+const BACKEND = `http://${config.host}:${config.port}`
 
 module.exports = {
   entry: path.resolve(__dirname, './src/main.js'),
@@ -82,11 +84,11 @@ module.exports = {
     noInfo: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:31337',
+        target: BACKEND,
         secure: false
       },
-      '/msg': {
-        target: 'http://localhost:31337',
+      '/socket.io': {
+        target: BACKEND,
         secure: false
       }
     }

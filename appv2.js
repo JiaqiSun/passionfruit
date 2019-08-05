@@ -79,5 +79,6 @@ export function stop() {
 
 
 if (require.main === module) {
-  start()
+  const config = require('./lib/config')
+  start(config)
 }
