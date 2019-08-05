@@ -1,31 +1,60 @@
-function install(Vue) {
-  function notAllowed(target, key, receiver) {
-    throw new Error(key + ' is readony')
-  }
+import io from 'socket.io-client'
 
-  const proxy = new Proxy({}, {
-    get: function (target, key, receiver) {
-      return function () {
-        // todo:
+
+export default class WSRpc {
+  static install(Vue, _opts) {
+    const device = ''
+    const bundle = 'com.apple.mobilesafari'
+    const socket = io('/session', {
+      query: { device, bundle }
+    })
+  
+    const handlers = {
+      get: recursiveGetter,
+      apply,
+    }
+  
+    function recursiveGetter(target, name) {
+      if (typeof name === 'symbol')
+        chain = []
+      else
+        chain.push(name)
+      return new Proxy(target, handlers)
+    }
+  
+    let chain = []
+    function exec(method, args) {
+      return new Promise((resolve, reject) => {
+        let ok = false
+        socket.emit('rpc', { method, args }, response => {
+          if (response.status === 'ok') {
+            ok = true
+            resolve(response.data)
+          } else {
+            reject(response.error)
+          }
+        })
+  
+        setTimeout(() => {
+          if (!ok)
+            reject('Request timed out')
+        }, 5000)
+      })
+    }
+  
+    function apply(_target, _thisArg, argArray) {
+      let name, args
+      if (chain.length) {
+        name = chain.join('/')
+        args = argArray
+      } else {
+        [name, ...args] = argArray
       }
-    },
-    set: notAllowed,
-    defineProperty: notAllowed,
-    deleteProperty: notAllowed,
-    preventExtensions: notAllowed,
-    setPrototypeOf: notAllowed,
-  })
-
-  Object.defineProperty(Vue.prototype, '$rpc', {
-    get() { return proxy }
-  })
-}
-
-export default install
-
-if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(install)
-  if (install.installed) {
-    install.installed = false
+      chain = []
+      return exec(name, args)
+    }
+  
+    const proxy = new Proxy(() => {}, handlers)
+    Object.defineProperty(Vue.prototype, '$rpc', { get: () => proxy })
   }
 }
