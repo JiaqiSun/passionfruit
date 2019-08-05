@@ -77,3 +77,7 @@ export function stop() {
   server.close()
 }
 
+
+if (require.main === module) {
+  start()
+}
