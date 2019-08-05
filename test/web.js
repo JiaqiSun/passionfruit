@@ -6,11 +6,9 @@ import { server, start, stop } from '../appv2'
 import { Device } from '../lib/device'
 
 describe('Web', () => {
-  before(async () => {
-    await start()
-  })
-
   it('should server the page and rest api', async () => {
+    await start()
+
     request(server).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html')
@@ -36,9 +34,7 @@ describe('Web', () => {
       bundle: 'com.apple.mobilesafari',
       url: 'about:blank'
     }).expect(200)
-  })
 
-  after(async () => {
-    await stop()
+    stop()
   })
 })
