@@ -15,7 +15,7 @@ describe('device management', () => {
     expect(apps.length).to.be.greaterThan(0)
     expect(apps[0]).to.have.keys('id', 'identifier', 'largeIcon', 'name', 'smallIcon')
     expect(await device.open('com.apple.mobilesafari', 'about:blank')).to.gt(0)
-    expect(await device.valueOf()).to.have.keys('name', 'id', 'icon')
+    expect(await device.valueOf()).to.have.keys('name', 'id', 'icon', 'type')
     expect(device.host).to.be.null
 
     const session = await device.spawn('com.apple.calculator')
