@@ -12,8 +12,8 @@
     "lint": "npm run lint:agent && npm run lint:server",
     "lint:agent": "eslint agent/app",
     "lint:server": "eslint *.js && eslint lib",
-    "dev": "{ npm start & npm run frida:watch & npm run frontend ;}",
-    "frontend": "pushd gui && npm run dev && popd",
+    "dev": "{ npm start & npm run frida:watch & npm run frontend; }",
+    "frontend": "pushd guiv2 && npm run serve && popd",
     "start": "cross-env NODE_ENV=development nodemon -r esm .",
     "frida:watch": "webpack --config agent/webpack.config.js --watch --mode development",
     "frida:compile": "webpack --config agent/webpack.config.js --mode production",
@@ -21,7 +21,12 @@
     "coverage": "nyc npm test"
   },
   "nodemonConfig": {
-    "ignore": ["test/*", "gui/*", "agent/*", "node_modules/*"]
+    "ignore": [
+      "test/*",
+      "gui/*",
+      "agent/*",
+      "node_modules/*"
+    ]
   },
   "repository": {
     "type": "git",
@@ -62,6 +67,7 @@
     "socket.io-stream": "^0.9.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.3.31",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-env": "^5.2.0",
