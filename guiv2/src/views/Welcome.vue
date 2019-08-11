@@ -3,7 +3,7 @@
     <section class="hero is-fullheight">
       <div class="hero-body">
         <div class="container">
-          <img alt="Passionfruit" src="./assets/logo.svg" width="300" />
+          <img alt="Passionfruit" src="../assets/logo.svg" width="300" />
           <p>
             Web based iOS App Analyzer, powered by
             <a href="https://frida.re">frida.re</a>, created by
@@ -22,12 +22,14 @@
 
             <ul class="devices">
               <li v-for="dev in devices" :key="dev.id">
-                <h3 class="device-name">
-                  <Icon :icon="dev.icon" :width="24" :height="24" />
-                  {{ dev.name }}
-                  <b-icon :icon="dev.type" size="is-small"></b-icon>
-                </h3>
-                <code>{{ dev.id }}</code>
+                <router-link :to="{ name: 'apps', params: { device: dev.id } }">
+                  <h3 class="device-name">
+                    <Icon :icon="dev.icon" :width="24" :height="24" />
+                    {{ dev.name }}
+                    <b-icon :icon="dev.type" size="is-small"></b-icon>
+                  </h3>
+                  <code>{{ dev.id }}</code>
+                </router-link>
               </li>
             </ul>
           </section>
@@ -59,7 +61,6 @@ ul.devices {
   li {
     border: 1px solid #ffffff42;
     border-radius: 4px;
-    padding: 1rem;
     display: inline-block;
     width: 360px;
     height: 80px;
@@ -69,6 +70,11 @@ ul.devices {
 
     &:hover {
       border-color: #ffffff;
+    }
+
+    > a {
+      display: block;
+      padding: 1rem;
     }
 
     code {
@@ -91,6 +97,7 @@ import Icon from "@/components/Icon.vue";
     Icon,
   }
 })
+
 export default class Welcome extends Vue {
   private devices!: DeviceInfo[];
   private version!: string;

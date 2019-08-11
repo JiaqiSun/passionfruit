@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 export default class WSRpc {
   static install(Vue, _opts) {
-    const device = ''
+    const device = 'f8970f2487c837d4374f89de417d614fd771f664'
     const bundle = 'com.apple.mobilesafari'
     const socket = io('/session', {
       query: { device, bundle }

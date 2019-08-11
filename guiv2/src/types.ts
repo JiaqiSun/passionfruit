@@ -9,3 +9,10 @@ export interface IconInfo {
   height: number;
   pixels: string;
 }
+
+export interface AppInfo {
+  identifier: string;
+  largeIcon: IconInfo;
+  name: string;
+  smallIcon: IconInfo;
+}
