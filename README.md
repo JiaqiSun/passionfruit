@@ -95,9 +95,11 @@ npm install
 
 For those who wants to contribute, you may probably need to restart the api server and reload webpage each time you make a change. The following steps enable livereload.
 
-```shell
-npm run dev
-```
+Open 3 shells simultaneously
+
+* `cd gui; npm run serve` # serve frontend
+* `npm run frida:watch` # watch and build frida agent
+* `npm start` # start backend server
 
 Browser will be open (http://localhost:8080)
 
